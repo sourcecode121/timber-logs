@@ -12,6 +12,19 @@ public class TimberApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Timber.plant(new Timber.DebugTree());
+        if(BuildConfig.DEBUG){
+            Timber.plant(new Timber.DebugTree(){
+                // Add line numbers to the tag
+                @Override
+                protected String createStackElementTag(StackTraceElement element) {
+                    return super.createStackElementTag(element) + ":" + element.getLineNumber();
+                }
+            });
+        }
+        else {
+            // Release mode
+            Timber.plant(new ReleaseTree());
+        }
+
     }
 }
